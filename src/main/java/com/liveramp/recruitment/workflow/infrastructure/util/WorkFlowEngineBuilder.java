@@ -3,6 +3,7 @@ package com.liveramp.recruitment.workflow.infrastructure.util;
 import com.liveramp.recruitment.workflow.domain.entity.Task;
 import com.liveramp.recruitment.workflow.domain.entity.WorkExecutionModelEnum;
 import com.liveramp.recruitment.workflow.domain.entity.WorkNode;
+import com.liveramp.recruitment.workflow.domain.entity.WorkNodeFinishTypeEnum;
 import com.liveramp.recruitment.workflow.domain.entity.work.Work;
 import com.liveramp.recruitment.workflow.domain.entity.workflow.ParallelFlow;
 import com.liveramp.recruitment.workflow.domain.entity.workflow.SequentialFlow;
@@ -62,7 +63,8 @@ public class WorkFlowEngineBuilder implements ApplicationContextAware {
             if(workNode.getWorkExecutionModel() == WorkExecutionModelEnum.SEQUENTIAL) {
                 work = getSequentialWork(taskId, subWorkNodeList);
             } else {
-                work = getParallelWork(taskId, subWorkNodeList);
+                WorkNodeFinishTypeEnum workNodeFinishType = workNode.getWorkNodeFinishTypeEnum();
+                work = getParallelWork(taskId, subWorkNodeList, workNodeFinishType);
             }
 
         } else {
@@ -93,10 +95,10 @@ public class WorkFlowEngineBuilder implements ApplicationContextAware {
         return sequentialFlowBuilder.build();
     }
 
-    private static Work getParallelWork(String taskId, List<WorkNode> workNodeList) {
+    private static Work getParallelWork(String taskId, List<WorkNode> workNodeList, WorkNodeFinishTypeEnum workNodeFinishTypeEnum) {
 
         ExecutorService executorService = Executors.newFixedThreadPool(workNodeList.size());
-        ParallelFlow.Builder parallelFlowBuilder = ParallelFlow.Builder.aNewParallelFlow(executorService);
+        ParallelFlow.Builder parallelFlowBuilder = ParallelFlow.Builder.aNewParallelFlow(executorService, workNodeFinishTypeEnum);
 
         for(WorkNode subWorkNode : workNodeList) {
             parallelFlowBuilder.execute(getEngineWork(taskId, subWorkNode));

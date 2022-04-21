@@ -1,10 +1,7 @@
 package com.liveramp.recruitment.workflow.application;
 
 import com.liveramp.recruitment.workflow.domain.Repository.TaskRepository;
-import com.liveramp.recruitment.workflow.domain.entity.Task;
-import com.liveramp.recruitment.workflow.domain.entity.WorkExecutionModelEnum;
-import com.liveramp.recruitment.workflow.domain.entity.WorkNode;
-import com.liveramp.recruitment.workflow.domain.entity.WorkNodeJobType;
+import com.liveramp.recruitment.workflow.domain.entity.*;
 import com.liveramp.recruitment.workflow.domain.entity.work.WorkContext;
 import com.liveramp.recruitment.workflow.domain.entity.work.WorkReport;
 import com.liveramp.recruitment.workflow.domain.entity.work.WorkStatus;
@@ -57,6 +54,31 @@ public class WorkflowApplicationService {
     }
 
     @Async
+    public void reprocess(String taskId){
+        WorkFlow workFlow = WorkFlowEngineBuilder.get(taskId);
+        if(null == workFlow){
+            Task task = taskRepository.findOneById(taskId);
+            if(task!= null) {
+                workFlow = WorkFlowEngineBuilder.build(task);
+            }
+        }
+        if(workFlow != null){
+            WorkContext context = new WorkContext();
+            context.setFlowId(taskId);
+
+            WorkReport workReport = workFlow.call(context);
+            WorkStatus workStatus =  workReport.getStatus();
+
+            if(WorkStatus.COMPLETED.name().equalsIgnoreCase(workStatus.name())){
+                System.out.println("COMPLETED");
+            }else{
+                System.out.println("FAILED");
+            }
+        }
+
+    }
+
+    @Async
     public void process(String taskId){
         Task task = taskRepository.findOneById(taskId);
         if(task != null){
@@ -92,6 +114,9 @@ public class WorkflowApplicationService {
         WorkNode workNode3 = new WorkNode();
         workNode3.setWorkId("3");
         workNode3.setWorkExecutionModel(WorkExecutionModelEnum.PARALLEL);
+        //并行 至少又一个成功
+        workNode3.setWorkNodeFinishTypeEnum(WorkNodeFinishTypeEnum.ATLEASTONE);
+
         List<WorkNode> subWorkNodeList = new ArrayList<>();
         WorkNode workNode31 = new WorkNode();
         workNode31.setWorkId("3(1)");

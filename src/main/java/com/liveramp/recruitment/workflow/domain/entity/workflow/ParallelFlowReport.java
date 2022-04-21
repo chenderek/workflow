@@ -16,6 +16,7 @@ import java.util.Map;
 public class ParallelFlowReport implements WorkReport {
 
     private List<WorkReport> reports;
+    private WorkStatus status;
 
     /**
      * Create a new {@link ParallelFlowReport}.
@@ -61,14 +62,31 @@ public class ParallelFlowReport implements WorkReport {
      * </ul>
      * @return workflow status
      */
-    @Override
-    public WorkStatus getStatus() {
+    public WorkStatus getAllStatus() {
         for (WorkReport report : reports) {
             if (report.getStatus().equals(WorkStatus.FAILED)) {
                 return WorkStatus.FAILED;
             }
         }
         return WorkStatus.COMPLETED;
+    }
+
+    public WorkStatus getAtLeastOneStatus() {
+        for (WorkReport report : reports) {
+            if (report.getStatus().equals(WorkStatus.COMPLETED)) {
+                return WorkStatus.COMPLETED;
+            }
+        }
+        return WorkStatus.FAILED;
+    }
+
+    @Override
+    public WorkStatus getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(WorkStatus workStatus){
+        this.status = workStatus;
     }
 
     /**

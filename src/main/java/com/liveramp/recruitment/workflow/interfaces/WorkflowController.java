@@ -35,8 +35,14 @@ public class WorkflowController {
         return "running";
     }
 
-    @GetMapping("/test/process")
-    public String testProcess(@PathVariable("taskId")String taskId){
+    @GetMapping("{taskId}/rerun")
+    public String reprocess(@PathVariable("taskId")String taskId){
+        workflowApplicationService.reprocess(taskId);
+        return "running";
+    }
+
+    @GetMapping("/testProcess")
+    public String testProcess(){
         workflowApplicationService.process();
         return "running";
     }

@@ -1,9 +1,11 @@
 package com.liveramp.recruitment.workflow.domain.entity.workflow;
 
 
+import com.liveramp.recruitment.workflow.domain.entity.WorkNodeFinishTypeEnum;
 import com.liveramp.recruitment.workflow.domain.entity.work.Work;
 import com.liveramp.recruitment.workflow.domain.entity.work.WorkContext;
 import com.liveramp.recruitment.workflow.domain.entity.work.WorkReport;
+import com.liveramp.recruitment.workflow.domain.entity.work.WorkStatus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,11 +29,13 @@ public class ParallelFlow extends AbstractWorkFlow {
 
     private List<Work> works = new ArrayList<>();
     private ParallelFlowExecutor workExecutor;
+    private WorkNodeFinishTypeEnum workNodeFinishTypeEnum;
 
-    ParallelFlow(String name, List<Work> works, ParallelFlowExecutor parallelFlowExecutor) {
+    ParallelFlow(String name, List<Work> works, ParallelFlowExecutor parallelFlowExecutor, WorkNodeFinishTypeEnum workNodeFinishTypeEnum) {
         super(name);
         this.works.addAll(works);
         this.workExecutor = parallelFlowExecutor;
+        this.workNodeFinishTypeEnum = workNodeFinishTypeEnum;
     }
 
     /**
@@ -41,6 +45,16 @@ public class ParallelFlow extends AbstractWorkFlow {
         ParallelFlowReport workFlowReport = new ParallelFlowReport();
         List<WorkReport> workReports = workExecutor.executeInParallel(works, workContext);
         workFlowReport.addAll(workReports);
+        if(workNodeFinishTypeEnum == null || WorkNodeFinishTypeEnum.ALL.name().equalsIgnoreCase(workNodeFinishTypeEnum.name())){
+            //全部成功
+            WorkStatus allStatus = workFlowReport.getAllStatus();
+            workFlowReport.setStatus(allStatus);
+        }else{
+            //至少一个成功
+            WorkStatus atLeastOneStatus = workFlowReport.getAtLeastOneStatus();
+            workFlowReport.setStatus(atLeastOneStatus);
+        }
+
         return workFlowReport;
     }
 
@@ -49,11 +63,13 @@ public class ParallelFlow extends AbstractWorkFlow {
         private String name;
         private List<Work> works;
         private ExecutorService executorService;
+        private WorkNodeFinishTypeEnum workNodeFinishTypeEnum;
 
-        private Builder(ExecutorService executorService) {
+        private Builder(ExecutorService executorService, WorkNodeFinishTypeEnum workNodeFinishTypeEnum) {
             this.name = UUID.randomUUID().toString();
             this.works = new ArrayList<>();
             this.executorService = executorService;
+            this.workNodeFinishTypeEnum = workNodeFinishTypeEnum;
         }
 
         /**
@@ -67,8 +83,8 @@ public class ParallelFlow extends AbstractWorkFlow {
          * @param executorService to use to run work units in parallel
          * @return a new {@link ParallelFlow} builder
          */
-        public static ParallelFlow.Builder aNewParallelFlow(ExecutorService executorService) {
-            return new ParallelFlow.Builder(executorService);
+        public static ParallelFlow.Builder aNewParallelFlow(ExecutorService executorService, WorkNodeFinishTypeEnum workNodeFinishTypeEnum) {
+            return new ParallelFlow.Builder(executorService, workNodeFinishTypeEnum);
         }
 
         public ParallelFlow.Builder named(String name) {
@@ -82,7 +98,7 @@ public class ParallelFlow extends AbstractWorkFlow {
         }
 
         public ParallelFlow build() {
-            return new ParallelFlow(name, works, new ParallelFlowExecutor(executorService));
+            return new ParallelFlow(name, works, new ParallelFlowExecutor(executorService), workNodeFinishTypeEnum);
         }
     }
 }
