@@ -1,0 +1,7 @@
+server:
+  port: 8888
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:AcxiomCDP$2020@dds-uf6e1fb484934c041926-pub.mongodb.rds.aliyuncs.com:3717,dds-uf6e1fb484934c042371-pub.mongodb.rds.aliyuncs.com:3717/admin?replicaSet=mgset-36026155
+      database: rule
