@@ -124,7 +124,7 @@ public class WorkflowApplicationService {
         workNodeList.add(workNode2);
 
         WorkNode workNode3 = new WorkNode();
-        workNode3.setWorkId("3");
+        workNode3.setWorkId("3 PARALLEL");
         workNode3.setWorkExecutionModel(WorkExecutionModelEnum.PARALLEL);
         //并行 至少又一个成功
         workNode3.setWorkNodeFinishTypeEnum(WorkNodeFinishTypeEnum.ATLEASTONE);
@@ -132,10 +132,10 @@ public class WorkflowApplicationService {
         List<WorkNode> subWorkNodeList = new ArrayList<>();
         WorkNode workNode31 = new WorkNode();
         workNode31.setWorkId("3(1)");
-        workNode31.setWorkNodeJobType(WorkNodeJobType.WorkNodeJob3);
+        workNode31.setWorkNodeJobType(WorkNodeJobType.WorkNodeJob31);
         WorkNode workNode32 = new WorkNode();
         workNode32.setWorkId("3(2)");
-        workNode32.setWorkNodeJobType(WorkNodeJobType.WorkNodeJob3);
+        workNode32.setWorkNodeJobType(WorkNodeJobType.WorkNodeJob32);
         subWorkNodeList.add(workNode31);
         subWorkNodeList.add(workNode32);
         workNode3.setSubWorkNodeList(subWorkNodeList);

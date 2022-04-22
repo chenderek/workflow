@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 /**
  * Created by derche on 2022/4/22.
  */
-@Component("WorkNodeJob2")
-public class WorkNodeJob2 extends AbstractWorkFlow {
+@Component("WorkNodeJob32")
+public class WorkNodeJob32 extends AbstractWorkFlow {
 
     @Autowired
     WorkNodeJobService workNodeJobService;
@@ -27,7 +27,7 @@ public class WorkNodeJob2 extends AbstractWorkFlow {
             workNodeJobService.execute();
             String taskId = workContext.getFlowId();
             WorkNode workNode = (WorkNode)this.getConfiguration(taskId);
-            System.out.println("running job2 on workNode: " + workNode.getWorkId());
+            System.out.println("running job32 on workNode: " + workNode.getWorkId());
         } catch (Exception e) {
             workReport = new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
             return workReport;

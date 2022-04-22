@@ -21,7 +21,7 @@ public class WorkNodeJobService {
     TaskLogRepository taskLogRepository;
 
     public TaskLog saveLog(String taskId, WorkReport workReport){
-        TaskLog taskLog = taskLogRepository.findOneByTaskId(taskId);
+        /*TaskLog taskLog = taskLogRepository.findOneByTaskId(taskId);
         if(taskLog == null){
             taskLog = new TaskLog();
             taskLog.setId(UUID.randomUUID().toString());
@@ -32,7 +32,8 @@ public class WorkNodeJobService {
         workReportList.add(workReport);
         taskLog.setWorkReportList(workReportList);
 
-        return taskLogRepository.save(taskLog);
+        return taskLogRepository.save(taskLog);*/
+        return null;
     }
 
     public void execute(){

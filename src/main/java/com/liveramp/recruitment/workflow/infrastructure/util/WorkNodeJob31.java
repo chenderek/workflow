@@ -1,5 +1,6 @@
 package com.liveramp.recruitment.workflow.infrastructure.util;
 
+import com.liveramp.recruitment.workflow.domain.entity.WorkNode;
 import com.liveramp.recruitment.workflow.domain.entity.work.DefaultWorkReport;
 import com.liveramp.recruitment.workflow.domain.entity.work.WorkContext;
 import com.liveramp.recruitment.workflow.domain.entity.work.WorkReport;
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Component;
 /**
  * Created by derche on 2022/4/22.
  */
-@Component("WorkNodeJob3")
-public class WorkNodeJob3 extends AbstractWorkFlow {
+@Component("WorkNodeJob31")
+public class WorkNodeJob31 extends AbstractWorkFlow {
 
     @Autowired
     WorkNodeJobService workNodeJobService;
@@ -24,7 +25,9 @@ public class WorkNodeJob3 extends AbstractWorkFlow {
         try {
             //TODO
             workNodeJobService.execute();
-            System.out.println("running WorkNodeJob3");
+            String taskId = workContext.getFlowId();
+            WorkNode workNode = (WorkNode)this.getConfiguration(taskId);
+            System.out.println("running job31 on workNode: " + workNode.getWorkId());
         } catch (Exception e) {
             workReport = new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
             return workReport;

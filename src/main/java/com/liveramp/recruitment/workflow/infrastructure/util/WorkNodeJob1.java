@@ -1,5 +1,6 @@
 package com.liveramp.recruitment.workflow.infrastructure.util;
 
+import com.liveramp.recruitment.workflow.domain.entity.WorkNode;
 import com.liveramp.recruitment.workflow.domain.entity.work.DefaultWorkReport;
 import com.liveramp.recruitment.workflow.domain.entity.work.WorkContext;
 import com.liveramp.recruitment.workflow.domain.entity.work.WorkReport;
@@ -23,8 +24,11 @@ public class WorkNodeJob1 extends AbstractWorkFlow {
 
         try {
             //TODO
+
+            String taskId = workContext.getFlowId();
+            WorkNode workNode = (WorkNode)this.getConfiguration(taskId);
+            System.out.println("running job1 on workNode: " + workNode.getWorkId());
             workNodeJobService.execute();
-            System.out.println("running WorkNodeJob1");
         } catch (Exception e) {
             workReport = new DefaultWorkReport(WorkStatus.FAILED, workContext, e);
             return workReport;
