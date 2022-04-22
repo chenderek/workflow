@@ -32,6 +32,8 @@ public class WorkNodeJob2 extends AbstractWorkFlow {
 
         workReport = new DefaultWorkReport(WorkStatus.COMPLETED, workContext);
 
+        workNodeJobService.saveLog(workContext.getFlowId(), workReport);
+
         return workReport;
     }
 }
