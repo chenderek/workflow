@@ -2,6 +2,7 @@ package com.liveramp.recruitment.workflow.interfaces;
 
 import com.liveramp.recruitment.workflow.application.WorkflowApplicationService;
 import com.liveramp.recruitment.workflow.domain.entity.Task;
+import com.liveramp.recruitment.workflow.domain.entity.TaskLog;
 import com.liveramp.recruitment.workflow.domain.entity.WorkNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,12 @@ public class WorkflowController {
     public Object addWorkNode(@PathVariable("taskId")String taskId, @RequestBody WorkNode workNode){
 
         return workflowApplicationService.addWorkNode(taskId, workNode);
+    }
+
+    @GetMapping("{taskId}/log")
+    @ResponseBody
+    public TaskLog getLog(@PathVariable("taskId")String taskId){
+        return workflowApplicationService.getLog(taskId);
     }
 
     @GetMapping("{taskId}/process")

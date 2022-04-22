@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @Component("WorkNodeJob1")
 public class WorkNodeJob1 extends AbstractWorkFlow {
 
-//    @Autowired
-
+    @Autowired
+    WorkNodeJobService workNodeJobService;
 
     @Override
     public WorkReport call(WorkContext workContext) {
@@ -23,6 +23,7 @@ public class WorkNodeJob1 extends AbstractWorkFlow {
 
         try {
             //TODO
+            workNodeJobService.execute();
             System.out.println("running WorkNodeJob1");
         } catch (Exception e) {
             workReport = new DefaultWorkReport(WorkStatus.FAILED, workContext, e);

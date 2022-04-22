@@ -1,5 +1,6 @@
 package com.liveramp.recruitment.workflow.application;
 
+import com.liveramp.recruitment.workflow.domain.Repository.TaskLogRepository;
 import com.liveramp.recruitment.workflow.domain.Repository.TaskRepository;
 import com.liveramp.recruitment.workflow.domain.entity.*;
 import com.liveramp.recruitment.workflow.domain.entity.work.WorkContext;
@@ -26,6 +27,9 @@ public class WorkflowApplicationService {
     @Autowired
     TaskRepository taskRepository;
 
+    @Autowired
+    TaskLogRepository taskLogRepository;
+
     public Task saveTask(Task task){
         if(task != null) {
             if(!StringUtils.hasText(task.getId())){
@@ -51,6 +55,14 @@ public class WorkflowApplicationService {
             return null;
         }
 
+    }
+
+    public TaskLog getLog(String taskId){
+        if(StringUtils.hasText(taskId)){
+            TaskLog taskLog = taskLogRepository.findOneByTaskId(taskId);
+            return taskLog;
+        }
+        return null;
     }
 
     @Async
